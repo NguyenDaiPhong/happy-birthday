@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Happy Birthday</title>
-
+  
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
@@ -12,8 +12,8 @@
       margin: 0;
       overflow: hidden;
       background: black;
-
-      /* === MỚI: SỬA DÒNG NÀY ĐỂ DÙNG FONT MỚI === */
+      
+      /* === THÊM LẠI: SỬA FONT === */
       font-family: 'Patrick Hand', 'Comic Sans MS', cursive;
     }
     canvas {
@@ -29,8 +29,6 @@
       text-shadow: 2px 2px 5px #000;
       z-index: 2;
     }
-    
-    /* CSS POPUP BẠN ĐÃ CHỌN */
     .popup {
       position: absolute;
       top: 50%;
@@ -47,7 +45,6 @@
       display: none;
       z-index: 3;
     }
-
 
     /* === CSS CHO VIDEO === */
     .video-container {
@@ -72,7 +69,6 @@
 <body>
 <canvas id="canvas"></canvas>
 <div class="message">🎂 Happy Birthday Tiu Tiu 🎉</div>
-
 <div class="popup" id="popup">💖 Chúc Tiu Tiu sinh nhật vui vẻ, tuổi mới thêm nhiều niềm vui mới, cầu gì được nấy, cầu tiền được tiền, cầu tình được tình, cầu tài được tài nhoazzz! 💖</div>
 
 <div class="video-container" id="video-container">
@@ -88,7 +84,6 @@ const ctx = canvas.getContext("2d");
 let W = canvas.width = window.innerWidth;
 let H = canvas.height = window.innerHeight;
 let time = 0;
-
 let clickState = 0; 
 
 const cake = {
@@ -112,6 +107,8 @@ const popup = document.getElementById("popup");
 const videoContainer = document.getElementById("video-container");
 const video = document.getElementById("birthdayVideo");
 
+
+/* === CÁC HÀM VẼ (GIỮ NGUYÊN) === */
 function drawCake() {
   const tierHeight = cake.height;
   const tierGap = 15;
@@ -133,11 +130,9 @@ function drawCake() {
     }
   }
 }
-
 function drawCandles() {
   const tierHeight = cake.height;
   const topY = cake.y - cake.tiers * (tierHeight + 15) + 10;
-
   candles.forEach(c => {
     const cx = cake.x + c.offset;
     const cy = topY - 20;
@@ -164,7 +159,6 @@ if (c.flame) {
 }
   });
 }
-
 function drawConfetti() {
   if (confetti.length < 60) {
     confetti.push({
@@ -186,7 +180,6 @@ function drawConfetti() {
     }
   }
 }
-
 function drawBalloons() {
   if (balloons.length < 6) {
     balloons.push({
@@ -215,23 +208,48 @@ function drawBalloons() {
     }
   }
 }
+/* === KẾT THÚC HÀM VẼ === */
 
-window.addEventListener("click", (event) => {
+
+/* === SỬA: LOGIC CLICK (Thêm 'touchstart' cho điện thoại) === */
+// Tạo một hàm chung để xử lý cả click và chạm
+function handleInteraction(event) {
+  // Ngăn chặn các hành vi mặc định (như zoom, cuộn, hoặc "ghost click")
+  event.preventDefault(); 
+  
+  // Nếu click vào video (ví dụ: nút play/pause) hoặc popup, thì không làm gì
   if (videoContainer.contains(event.target) || popup.contains(event.target)) {
     return;
   }
+
   if (clickState === 0) {
+    // CLICK 1: Tắt nến, hiện video
     candles.forEach(c => c.flame = false);
     videoContainer.style.display = "block";
+    
+    // CẢNH BÁO: Lệnh .play() này có thể BỊ CHẶN bởi iPhone!
     video.play(); 
-    clickState = 1; 
+    
+    clickState = 1; // Chuyển trạng thái
+
   } else if (clickState === 1) {
-    video.pause(); 
+    // CLICK 2: Ẩn video, hiện popup
+    video.pause(); // Dừng video
     videoContainer.style.display = "none";
     popup.style.display = "block";
-    clickState = 2; 
+    clickState = 2; // Chuyển trạng thái
+    
+    // Gỡ bỏ các listener sau khi đã xong
+    window.removeEventListener("click", handleInteraction);
+    window.removeEventListener("touchstart", handleInteraction);
   }
-});
+}
+
+// Thêm cả hai sự kiện để gọi chung 1 hàm
+window.addEventListener("click", handleInteraction);
+window.addEventListener("touchstart", handleInteraction);
+/* === KẾT THÚC SỬA === */
+
 
 function loop() {
   time++;
