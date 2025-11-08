@@ -3,12 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Happy Birthday</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
   <style>
     html, body {
       margin: 0;
       overflow: hidden;
       background: black;
-      font-family: 'Comic Sans MS', cursive;
+
+      /* === MỚI: SỬA DÒNG NÀY ĐỂ DÙNG FONT MỚI === */
+      font-family: 'Patrick Hand', 'Comic Sans MS', cursive;
     }
     canvas {
       display: block;
@@ -23,24 +29,27 @@
       text-shadow: 2px 2px 5px #000;
       z-index: 2;
     }
-.popup {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff5f8; /* Nền hồng rất nhạt */
-  padding: 30px;
-  border-radius: 15px; /* Bo tròn nhiều hơn */
-  font-size: 24px;
-  color: #c9003b; /* Màu đỏ hồng sậm, dễ đọc hơn */
-  font-weight: bold; /* In đậm chữ */
-  box-shadow: 0 0 25px #ffadc0; /* Bóng mờ màu hồng */
-  border: 2px solid #ffadc0; /* Thêm viền hồng */
-  display: none;
-  z-index: 3;
-}
+    
+    /* CSS POPUP BẠN ĐÃ CHỌN */
+    .popup {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: #fff5f8; /* Nền hồng rất nhạt */
+      padding: 30px;
+      border-radius: 15px; /* Bo tròn nhiều hơn */
+      font-size: 24px;
+      color: #c9003b; /* Màu đỏ hồng sậm, dễ đọc hơn */
+      font-weight: bold; /* In đậm chữ */
+      box-shadow: 0 0 25px #ffadc0; /* Bóng mờ màu hồng */
+      border: 2px solid #ffadc0; /* Thêm viền hồng */
+      display: none;
+      z-index: 3;
+    }
 
-    /* === THÊM MỚI: CSS CHO VIDEO === */
+
+    /* === CSS CHO VIDEO === */
     .video-container {
       position: absolute;
       top: 50%;
@@ -58,13 +67,12 @@
       max-width: 100%;
       max-height: 80vh; /* Giới hạn chiều cao video */
     }
-    /* === KẾT THÚC THÊM MỚI === */
-
   </style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
 <div class="message">🎂 Happy Birthday Tiu Tiu 🎉</div>
+
 <div class="popup" id="popup">💖 Chúc Tiu Tiu sinh nhật vui vẻ, tuổi mới thêm nhiều niềm vui mới, cầu gì được nấy, cầu tiền được tiền, cầu tình được tình, cầu tài được tài nhoazzz! 💖</div>
 
 <div class="video-container" id="video-container">
@@ -81,10 +89,7 @@ let W = canvas.width = window.innerWidth;
 let H = canvas.height = window.innerHeight;
 let time = 0;
 
-/* === THÊM MỚI: BIẾN TRẠNG THÁI === */
-let clickState = 0; // 0 = Bắt đầu, 1 = Đã hiện video, 2 = Đã hiện popup
-/* === KẾT THÚC THÊM MỚI === */
-
+let clickState = 0; 
 
 const cake = {
   x: W / 2,
@@ -103,12 +108,9 @@ const candles = [
 const confetti = [];
 const balloons = [];
 
-/* === THÊM MỚI: LẤY CÁC PHẦN TỬ HTML MỚI === */
 const popup = document.getElementById("popup");
 const videoContainer = document.getElementById("video-container");
 const video = document.getElementById("birthdayVideo");
-/* === KẾT THÚC THÊM MỚI === */
-
 
 function drawCake() {
   const tierHeight = cake.height;
@@ -139,20 +141,14 @@ function drawCandles() {
   candles.forEach(c => {
     const cx = cake.x + c.offset;
     const cy = topY - 20;
-
-    // Nến
     ctx.fillStyle = "pink";
     ctx.fillRect(cx - 6, cy + 20, 12, 50);
-
-    // Lửa kiểu giọt nước
-   // Lửa kiểu giọt nước nguyên vẹn
 if (c.flame) {
   const flameHeight = 20;
   const flameWidth = 12;
   const offset = Math.sin(time / 20 + c.offset) * 2;
-
   ctx.beginPath();
-  ctx.moveTo(cx, cy - flameHeight + offset); // đỉnh nhọn
+  ctx.moveTo(cx, cy - flameHeight + offset); 
   ctx.bezierCurveTo(
     cx + flameWidth, cy - flameHeight / 2 + offset,
     cx + flameWidth / 2, cy + 10 + offset,
@@ -166,7 +162,6 @@ if (c.flame) {
   ctx.fillStyle = "gold";
   ctx.fill();
 }
-
   });
 }
 
@@ -180,7 +175,6 @@ function drawConfetti() {
       speed: 1 + Math.random() * 2
     });
   }
-
   for (let i = 0; i < confetti.length; i++) {
     const c = confetti[i];
     ctx.fillStyle = c.color;
@@ -203,7 +197,6 @@ function drawBalloons() {
       speed: 1 + Math.random()
     });
   }
-
   for (let i = 0; i < balloons.length; i++) {
     const b = balloons[i];
     ctx.beginPath();
@@ -215,7 +208,6 @@ function drawBalloons() {
     ctx.lineTo(b.x, b.y + b.radius * 1.3 + 20);
     ctx.strokeStyle = "white";
     ctx.stroke();
-
     b.y -= b.speed;
     if (b.y < -50) {
       b.y = H + Math.random() * 100;
@@ -224,33 +216,22 @@ function drawBalloons() {
   }
 }
 
-/* === THAY THẾ: LOGIC CLICK === */
-// Xóa event listener cũ của canvas và thay bằng window
-// để bắt được click ở mọi nơi
 window.addEventListener("click", (event) => {
-
-  // Nếu click vào video (ví dụ: nút play/pause) hoặc popup, thì không làm gì
   if (videoContainer.contains(event.target) || popup.contains(event.target)) {
     return;
   }
-
   if (clickState === 0) {
-    // CLICK 1: Tắt nến, hiện video
     candles.forEach(c => c.flame = false);
     videoContainer.style.display = "block";
-    video.play(); // Tự động phát video
-    clickState = 1; // Chuyển trạng thái
-
+    video.play(); 
+    clickState = 1; 
   } else if (clickState === 1) {
-    // CLICK 2: Ẩn video, hiện popup
-    video.pause(); // Dừng video
+    video.pause(); 
     videoContainer.style.display = "none";
     popup.style.display = "block";
-    clickState = 2; // Chuyển trạng thái
+    clickState = 2; 
   }
-  // Nếu clickState = 2, không làm gì nữa
 });
-/* === KẾT THÚC THAY THẾ === */
 
 function loop() {
   time++;
