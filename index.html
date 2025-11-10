@@ -3,22 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <title>Happy Birthday</title>
-  
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Patrick+Hand&display=swap" rel="stylesheet">
   <style>
     html, body {
       margin: 0;
       overflow: hidden;
-      background: black;
-      
-      /* === THÊM LẠI: SỬA FONT === */
+      background: rgb(242, 158, 172); 
       font-family: 'Patrick Hand', 'Comic Sans MS', cursive;
     }
     canvas {
       display: block;
     }
+    
+    .header-message {
+      position: absolute;
+      top: 60px;
+      width: 100%;
+      text-align: center;
+      font-size: 42px;
+      color: #c9003b; 
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.7);
+      z-index: 5;
+      display: none;
+    }
+
     .message {
       position: absolute;
       bottom: 60px;
@@ -27,91 +35,280 @@
       font-size: 42px;
       color: gold;
       text-shadow: 2px 2px 5px #000;
-      z-index: 2;
+      z-index: 5;
+      display: none; 
     }
+
+    /* === CSS POPUP VỚI VIỀN ANIMATION === */
     .popup {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: #fff5f8; /* Nền hồng rất nhạt */
-      padding: 30px;
-      border-radius: 15px; /* Bo tròn nhiều hơn */
-      font-size: 24px;
-      color: #c9003b; /* Màu đỏ hồng sậm, dễ đọc hơn */
-      font-weight: bold; /* In đậm chữ */
-      box-shadow: 0 0 25px #ffadc0; /* Bóng mờ màu hồng */
-      border: 2px solid #ffadc0; /* Thêm viền hồng */
+      
+      border-radius: 18px; 
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
       display: none;
-      z-index: 3;
+      z-index: 10;
+      width: 600px; 
+      max-width: 80%; 
+      min-height: 250px; 
+      overflow: hidden;
+      
+      background: transparent; 
     }
+    .popup::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      background: conic-gradient(
+        from 180deg at 50% 50%, 
+        #FF69B4, #9370DB, #00BFFF, #32CD32, #FFD700, #FF6347, #FF69B4
+      );
+      animation: rotateBorder 4s linear infinite;
+      border-radius: 18px; 
+    }
+    .popup-inner-bg {
+      position: relative;
+      z-index: 2;
+      background: #ffffff;
+      border-radius: 16px; 
+      overflow: hidden; 
+      padding: 20px; 
+      display: flex; 
+      flex-direction: column; 
+      justify-content: center; 
+      align-items: center; 
+      height: 100%; 
+    }
+    .popup-content {
+        padding: 40px; 
+        text-align: center;
+        font-family: 'Patrick Hand', cursive;
+        color: #c9003b;
+        font-size: 28px; 
+        font-weight: bold;
+        line-height: 1.8; 
+    }
+    .popup .waves {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 60px; 
+      overflow: hidden; 
+    }
+    .popup .wave {
+      position: absolute;
+      bottom: -30px; 
+      width: 150%; 
+      height: 100px;
+      border-radius: 50%;
+      opacity: 0.7;
+      animation: waveMovement 10s linear infinite; 
+    }
+    .popup .wave1 { background-color: #ffe0e6; left: -20%; animation-delay: 0s; }
+    .popup .wave2 { background-color: #d1efff; left: 10%; animation-delay: 3s; }
+    .popup .wave3 { background-color: #fff6e0; left: 40%; animation-delay: 6s; }
+    @keyframes rotateBorder {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    @keyframes waveMovement {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); } 
+    }
+    /* === KẾT THÚC CSS POPUP === */
 
-    /* === CSS CHO VIDEO === */
-    .video-container {
+    .gift-box {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.7);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+      cursor: pointer;
       display: none;
-      z-index: 4; /* Hiển thị trên cùng */
-      text-align: center;
+      z-index: 3;
+      animation: bounce 1.2s infinite;
     }
-    video {
+    .gift-box img {
+      width: 160px;
+      height: auto;
+      user-select: none;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -55%) scale(1.05); }
+    }
+    .gift-message {
+      position: absolute;
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 28px;
+      color: #c9003b; 
+      font-weight: bold;
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.7);
+      display: none; 
+      z-index: 3;
+      animation: bounce 1.2s infinite; 
+      font-family: 'Patrick Hand', cursive;
+    }
+    .initial-message {
+      position: absolute;
+      top: 45%; 
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 32px; 
+      color: #c9003b; 
+      font-weight: bold;
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.7);
+      display: block; 
+      z-index: 3;
+      animation: bounce 1.2s infinite; 
+      font-family: 'Patrick Hand', cursive;
+      line-height: 1.5; 
+    }
+    
+    /* === SỬA LẠI CSS SLIDESHOW TẠI ĐÂY === */
+    .moment-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+      display: none;
+      z-index: 3;
+      animation: fadeIn 1.5s ease forwards;
+      width: 80vw;
+      height: 70vh;
+      
+      /* ĐÃ XÓA backdrop-filter VÀ box-shadow ĐỂ BỎ VIỀN TRẮNG */
+      /* backdrop-filter: blur(15px); */ 
+      /* background: rgba(255, 255, 255, 0.1); */
+      /* border-radius: 12px; */
+      /* box-shadow: 0 0 25px rgba(255,255,255,0.4); */
+    }
+    
+    .moment-slide {
+      position: absolute; 
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      
+      opacity: 0; 
+      transition: opacity 1.0s ease-in-out; 
+      
       max-width: 100%;
-      max-height: 80vh; /* Giới hạn chiều cao video */
+      max-height: 100%;
+      object-fit: contain;
+      
+      border-radius: 12px; /* Giữ bo góc cho ảnh */
+    }
+    .moment-slide.active { 
+      opacity: 1; 
+    }
+    /* === KẾT THÚC CSS SLIDESHOW === */
+
+    .caption { display: none; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translate(-50%, -55%); }
+      to { opacity: 1; transform: translate(-50%, -50%); }
+    }
+    .fade-out { animation: fadeOutCake 3s forwards; }
+    @keyframes fadeOutCake {
+      from { opacity: 1; }
+      to { opacity: 0; }
     }
   </style>
 </head>
 <body>
-<canvas id="canvas"></canvas>
-<div class="message">🎂 Happy Birthday Tiu Tiu 🎉</div>
-<div class="popup" id="popup">💖 Chúc Tiu Tiu sinh nhật vui vẻ, tuổi mới thêm nhiều niềm vui mới, cầu gì được nấy, cầu tiền được tiền, cầu tình được tình, cầu tài được tài nhoazzz! 💖</div>
 
-<div class="video-container" id="video-container">
-  <video id="birthdayVideo" width="80%" controls>
-    <source src="hpbd.mp4" type="video/mp4">
-    Trình duyệt của bạn không hỗ trợ video.
-  </video>
+<audio id="birthdayMusic" src="img/hpbd.mp3" loop></audio>
+<canvas id="canvas"></canvas>
+
+<div class="header-message">Hãy luôn vui vẻ và cười tươi như này nhé!!!</div>
+<div class="message">🎂 Happy Birthday Tiu Tiu 🎉</div>
+
+<div class="popup" id="popup">
+  <div class="popup-inner-bg">
+    <div class="popup-content">
+      💖 Chúc Tiu Tiu sinh nhật vui vẻ, tuổi mới thêm nhiều niềm vui mới, <br>
+      cầu gì được nấy, cầu tiền được tiền, cầu tình được tình, cầu tài được tài nhoazzz! 💖
+    </div>
+    <div class="waves">
+      <div class="wave wave1"></div>
+      <div class="wave wave2"></div>
+      <div class="wave wave3"></div>
+    </div>
+  </div>
 </div>
+
+<div class="gift-box" id="giftBox">
+  <img src="https://png.pngtree.com/png-clipart/20220125/original/pngtree-gift-box-gift-box-png-image_7213113.png" alt="Gift box">
+</div>
+
+<div class="gift-message" id="giftMessage">
+  Tiu Tiu nhấn vào hộp quà đii
+</div>
+
+<div class="initial-message" id="initialMessage">
+  Tiu Tiu nhấn vào màn hình đii
+</div>
+
+<div class="moment-container" id="momentContainer">
+  <img src="img/1.jpeg" alt="Kỷ niệm 1" class="moment-slide">
+  <img src="img/2.jpeg" alt="Kỷ niệm 2" class="moment-slide">
+  <img src="img/3.jpeg" alt="Kỷ niệm 3" class="moment-slide">
+  <img src="img/4.jpeg" alt="Kỷ niệm 4" class="moment-slide">
+  <img src="img/5.jpeg" alt="Kỷ niệm 5" class="moment-slide">
+  <img src="img/6.jpeg" alt="Kỷ niệm 6" class="moment-slide">
+  <img src="img/7.jpeg" alt="Kỷ niệm 6" class="moment-slide">  
+  <img src="img/9.jpeg" alt="Kỷ niệm 6" class="moment-slide">
+  <img src="img/8.jpeg" alt="Kỷ niệm 6" class="moment-slide">
+</div>
+
 <script>
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-
 let W = canvas.width = window.innerWidth;
 let H = canvas.height = window.innerHeight;
 let time = 0;
-let clickState = 0; 
 
-const cake = {
-  x: W / 2,
-  y: H / 2 + 30,
-  width: 340,
-  height: 60,
-  tiers: 3
-};
+let clickState = 0;
+let cakeOpacity = 0; 
+let animationStarted = false;
+
+const cake = { x: W / 2, y: H / 2 + 30, width: 340, height: 60, tiers: 3 };
 
 const candles = [
-  { offset: -70, flame: true },
-  { offset: 0, flame: true },
-  { offset: 70, flame: true }
+  { offset: -80, flame: true, color: "#FFD700" },
+  { offset: -40, flame: true, color: "#00BFFF" },
+  { offset: 0, flame: true, color: "#FF69B4" },
+  { offset: 40, flame: true, color: "#32CD32" },
+  { offset: 80, flame: true, color: "#9370DB" }
 ];
 
 const confetti = [];
 const balloons = [];
 
 const popup = document.getElementById("popup");
-const videoContainer = document.getElementById("video-container");
-const video = document.getElementById("birthdayVideo");
+const giftBox = document.getElementById("giftBox");
+const giftMessage = document.getElementById("giftMessage");
+const initialMessage = document.getElementById("initialMessage");
+const momentContainer = document.getElementById("momentContainer");
+const headerMessage = document.querySelector(".header-message");
+const footerMessage = document.querySelector(".message"); 
+const birthdayMusic = document.getElementById("birthdayMusic");
 
+const slides = momentContainer.getElementsByClassName("moment-slide");
+const SLIDE_DURATION = 3000;
+let slideIndex = 0;
+let slideInterval;
 
-/* === CÁC HÀM VẼ (GIỮ NGUYÊN) === */
 function drawCake() {
-  const tierHeight = cake.height;
-  const tierGap = 15;
+  ctx.globalAlpha = cakeOpacity;
+  const tierHeight = cake.height, tierGap = 15;
   for (let i = 0; i < cake.tiers; i++) {
     const tierWidth = cake.width - i * 60;
     const x = cake.x - tierWidth / 2;
@@ -129,34 +326,34 @@ function drawCake() {
       ctx.fill();
     }
   }
+  ctx.globalAlpha = 1;
 }
 function drawCandles() {
-  const tierHeight = cake.height;
-  const topY = cake.y - cake.tiers * (tierHeight + 15) + 10;
+  if (cakeOpacity <= 0) return;
+  const topY = cake.y - cake.tiers * (cake.height + 15) + 10;
   candles.forEach(c => {
     const cx = cake.x + c.offset;
     const cy = topY - 20;
-    ctx.fillStyle = "pink";
+    ctx.fillStyle = c.color;
     ctx.fillRect(cx - 6, cy + 20, 12, 50);
-if (c.flame) {
-  const flameHeight = 20;
-  const flameWidth = 12;
-  const offset = Math.sin(time / 20 + c.offset) * 2;
-  ctx.beginPath();
-  ctx.moveTo(cx, cy - flameHeight + offset); 
-  ctx.bezierCurveTo(
-    cx + flameWidth, cy - flameHeight / 2 + offset,
-    cx + flameWidth / 2, cy + 10 + offset,
-    cx, cy + 10 + offset
-  );
-  ctx.bezierCurveTo(
-    cx - flameWidth / 2, cy + 10 + offset,
-    cx - flameWidth, cy - flameHeight / 2 + offset,
-    cx, cy - flameHeight + offset
-  );
-  ctx.fillStyle = "gold";
-  ctx.fill();
-}
+    if (c.flame) {
+      const flameHeight = 20, flameWidth = 12;
+      const offset = Math.sin(time / 20 + c.offset) * 2;
+      ctx.beginPath();
+      ctx.moveTo(cx, cy - flameHeight + offset); 
+      ctx.bezierCurveTo(
+        cx + flameWidth, cy - flameHeight / 2 + offset,
+        cx + flameWidth / 2, cy + 10 + offset,
+        cx, cy + 10 + offset
+      );
+      ctx.bezierCurveTo(
+        cx - flameWidth / 2, cy + 10 + offset,
+        cx - flameWidth, cy - flameHeight / 2 + offset,
+        cx, cy - flameHeight + offset
+      );
+      ctx.fillStyle = "gold";
+      ctx.fill();
+    }
   });
 }
 function drawConfetti() {
@@ -169,16 +366,12 @@ function drawConfetti() {
       speed: 1 + Math.random() * 2
     });
   }
-  for (let i = 0; i < confetti.length; i++) {
-    const c = confetti[i];
+  confetti.forEach(c => {
     ctx.fillStyle = c.color;
     ctx.fillRect(c.x, c.y, c.size, c.size);
     c.y += c.speed;
-    if (c.y > H) {
-      c.y = -10;
-      c.x = Math.random() * W;
-    }
-  }
+    if (c.y > H) { c.y = -10; c.x = Math.random() * W; }
+  });
 }
 function drawBalloons() {
   if (balloons.length < 6) {
@@ -190,8 +383,7 @@ function drawBalloons() {
       speed: 1 + Math.random()
     });
   }
-  for (let i = 0; i < balloons.length; i++) {
-    const b = balloons[i];
+  balloons.forEach(b => {
     ctx.beginPath();
     ctx.fillStyle = b.color;
     ctx.ellipse(b.x, b.y, b.radius, b.radius * 1.3, 0, 0, Math.PI * 2);
@@ -202,62 +394,116 @@ function drawBalloons() {
     ctx.strokeStyle = "white";
     ctx.stroke();
     b.y -= b.speed;
-    if (b.y < -50) {
-      b.y = H + Math.random() * 100;
-      b.x = Math.random() * W;
-    }
-  }
+    if (b.y < -50) { b.y = H + Math.random() * 100; b.x = Math.random() * W; }
+  });
 }
-/* === KẾT THÚC HÀM VẼ === */
 
+function showPopup() {
+    momentContainer.style.display = "none";
+    headerMessage.style.display = "none"; 
+    
+    setTimeout(() => {
+        birthdayMusic.pause();
+    }, 10000); 
 
-/* === SỬA: LOGIC CLICK (Thêm 'touchstart' cho điện thoại) === */
-// Tạo một hàm chung để xử lý cả click và chạm
-function handleInteraction(event) {
-  // Ngăn chặn các hành vi mặc định (như zoom, cuộn, hoặc "ghost click")
-  event.preventDefault(); 
-  
-  // Nếu click vào video (ví dụ: nút play/pause) hoặc popup, thì không làm gì
-  if (videoContainer.contains(event.target) || popup.contains(event.target)) {
-    return;
-  }
+    if (slides.length > 0) {
+      slides[slides.length - 1].classList.remove("active");
+    }
+    popup.style.display = "block";
+    clickState = 3; 
+}
+
+function handleInteraction(e) {
+  e.preventDefault();
 
   if (clickState === 0) {
-    // CLICK 1: Tắt nến, hiện video
-    candles.forEach(c => c.flame = false);
-    videoContainer.style.display = "block";
+    initialMessage.style.display = "none";
     
-    // CẢNH BÁO: Lệnh .play() này có thể BỊ CHẶN bởi iPhone!
-    video.play(); 
+    animationStarted = true;
+    footerMessage.style.display = "block";
+    birthdayMusic.play();
     
-    clickState = 1; // Chuyển trạng thái
+    clickState = 0.5;
 
-  } else if (clickState === 1) {
-    // CLICK 2: Ẩn video, hiện popup
-    video.pause(); // Dừng video
-    videoContainer.style.display = "none";
-    popup.style.display = "block";
-    clickState = 2; // Chuyển trạng thái
-    
-    // Gỡ bỏ các listener sau khi đã xong
-    window.removeEventListener("click", handleInteraction);
-    window.removeEventListener("touchstart", handleInteraction);
+    cakeOpacity = 1;
+    candles.forEach(c => c.flame = true); 
+
+    setTimeout(() => {
+      
+      candles.forEach(c => c.flame = false);
+
+      let fadeInterval = setInterval(() => {
+        cakeOpacity -= 0.02;
+        if (cakeOpacity <= 0) {
+          cakeOpacity = 0;
+          clearInterval(fadeInterval);
+          
+          giftBox.style.display = "block";
+          giftMessage.style.display = "block";
+          clickState = 1; 
+        }
+      }, 80);
+
+    }, 3000);
   }
 }
 
-// Thêm cả hai sự kiện để gọi chung 1 hàm
+function runSlideshow() {
+    if (slides.length === 0) return;
+    
+    // Ẩn tất cả slide
+    for (let i = 0; i < slides.length; i++) {
+        slides[i].classList.remove("active");
+    }
+    
+    // Hiện cái đầu tiên
+    slideIndex = 0;
+    slides[slideIndex].classList.add("active");
+    
+    slideInterval = setInterval(() => {
+        let oldIndex = slideIndex;
+        slideIndex++;
+        
+        if (slideIndex >= slides.length) {
+            // Hết ảnh
+            clearInterval(slideInterval);
+            // Làm mờ ảnh cuối cùng
+            slides[oldIndex].classList.remove("active");
+            // Sau khi mờ xong thì hiện thiệp
+            setTimeout(showPopup, 1000); // Chờ 1s cho ảnh cuối mờ đi
+        } else {
+            // Chuyển ảnh: Ẩn ảnh cũ, hiện ảnh mới
+            slides[oldIndex].classList.remove("active");
+            slides[slideIndex].classList.add("active");
+        }
+    }, SLIDE_DURATION);
+}
+
+giftBox.addEventListener("click", (e) => {
+  e.stopPropagation(); 
+  giftBox.style.display = "none";
+  giftMessage.style.display = "none"; 
+  momentContainer.style.display = "block";
+  
+  headerMessage.style.display = "block"; 
+
+  runSlideshow();
+});
+
 window.addEventListener("click", handleInteraction);
 window.addEventListener("touchstart", handleInteraction);
-/* === KẾT THÚC SỬA === */
-
 
 function loop() {
   time++;
   ctx.clearRect(0, 0, W, H);
-  drawConfetti();
-  drawBalloons();
-  drawCake();
-  drawCandles();
+  
+  if (animationStarted) {
+    drawConfetti();
+    drawBalloons();
+  }
+  
+  drawCake(); 
+  drawCandles(); 
   requestAnimationFrame(loop);
 }
 loop();
