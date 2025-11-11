@@ -416,13 +416,30 @@ function showPopup() {
 function handleInteraction(e) {
   e.preventDefault();
 
-  if (clickState === 0) {
+if (clickState === 0) {
     initialMessage.style.display = "none";
     
     animationStarted = true;
     footerMessage.style.display = "block";
-    birthdayMusic.play();
-    
+
+    // === SỬA LỖI ÂM THANH TRÊN ĐIỆN THOẠI ===
+    // Tải (load) và Phát (play) để "mở khóa" âm thanh
+    // (Một số trình duyệt cần .play() trả về một promise)
+    var playPromise = birthdayMusic.play();
+
+    if (playPromise !== undefined) {
+      playPromise.then(_ => {
+        // Nhạc đã chạy
+      })
+      .catch(error => {
+        // Nhạc bị chặn, thử tải lại và chạy lại
+        console.log("Lỗi play, thử load() và play() lại:", error);
+        birthdayMusic.load();
+        birthdayMusic.play();
+      });
+    }
+    // === KẾT THÚC SỬA LỖI ===
+
     clickState = 0.5;
 
     cakeOpacity = 1;
@@ -510,4 +527,5 @@ loop();
 </script>
 </body>
 </html>
+
 
